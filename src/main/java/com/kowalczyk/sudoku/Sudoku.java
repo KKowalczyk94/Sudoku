@@ -1,5 +1,7 @@
 package com.kowalczyk.sudoku;
 
+import com.kowalczyk.sudoku.helperClasses.SudokuFiller;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -21,5 +23,6 @@ public class Sudoku {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 }

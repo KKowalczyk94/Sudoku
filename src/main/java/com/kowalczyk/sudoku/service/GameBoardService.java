@@ -1,8 +1,10 @@
 package com.kowalczyk.sudoku.service;
 
+import com.kowalczyk.sudoku.model.BoxCell;
 import com.kowalczyk.sudoku.model.GameBoard;
 
-public class GameBoardService {
+import javax.swing.*;
 
+public class GameBoardService {
 
 }
