@@ -2,7 +2,8 @@ package com.kowalczyk.sudoku.service;
 
 import com.kowalczyk.sudoku.model.GameBoard;
 import com.kowalczyk.sudoku.model.Puzzle;
-import com.kowalczyk.sudoku.model.SystemProperties;
+
+import java.util.Arrays;
 
 public class GameBoardService {
 
@@ -19,9 +20,10 @@ public class GameBoardService {
     }
 
     public void displayBoard(GameBoard gameBoard){
-        for (int i = 0; i < gameBoard.getPuzzle().getCell().length; i++)
-            for (int j = 0; j < gameBoard.getPuzzle().getCell().length; j++){
-                System.out.print(gameBoard.getPuzzle().getCell());
-            }
+        for (int i = 0; i < gameBoard.getPuzzle().getCells().length; i++) {
+            for (int j = 0; j < gameBoard.getPuzzle().getCells().length; j++) {
+                System.out.print(gameBoard.getPuzzle().getPuzzleCellNumber(i, j) + "\t");
+            }System.out.println();
+        }
     }
 }

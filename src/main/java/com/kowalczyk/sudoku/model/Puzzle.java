@@ -8,6 +8,9 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Puzzle {
-    private Cell[][] cell;
+    private Cell[][] cells;
 
+    public int getPuzzleCellNumber(int row, int column){
+       return cells[row][column].getNumber();
+    }
 }
