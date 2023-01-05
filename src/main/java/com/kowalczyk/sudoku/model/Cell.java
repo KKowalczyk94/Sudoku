@@ -6,7 +6,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-public class BoxCell {
+public class Cell {
     private int row;
     private int column;
     private int number;

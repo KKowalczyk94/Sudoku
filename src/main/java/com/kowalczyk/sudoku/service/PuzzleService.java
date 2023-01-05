@@ -9,8 +9,8 @@ public class PuzzleService {
     private int cellsForPlayerToGuess = Integer.parseInt(SystemProperties.PROPS.getProperty("sudokuBoard.cellsForPlayerToGuess"));;
     Puzzle puzzle9x9;
     Random random = new Random();
-    BoxCell[][] boxCellBoard9x9 = new BoxCell[9][9];
-    int[][] intBoard = new int[][] {
+    Cell[][] boxCellBoard9x9 = new Cell[9][9];
+    int[][] intBoard9x9 = new int[][] {
             {1,2,3,  4,5,6,  7,8,9},
             {4,5,6,  7,8,9,  1,2,3},
             {7,8,9,  1,2,3,  4,5,6},
@@ -24,13 +24,34 @@ public class PuzzleService {
             {9,7,8,  3,1,2,  6,4,5}
     };
 
-    public Puzzle createRandomPuzzleFilled9x9(BoxCell[][] boxCellBoard9x9){
+    int[][] intBoard6x6 = new int[][] {
+            {1,2,3,  4,5,6},
+            {4,5,6,  7,8,9},
+            {7,8,9,  1,2,3},
+
+            {2,3,1,  5,6,4},
+            {5,6,4,  8,9,7},
+            {8,9,7,  2,3,1},
+
+    };
+
+    int[][] intBoard4x4 = new int[][] {
+            {2,1,  3,4},
+            {4,3,  1,2},
+
+            {1,2,  4,3},
+            {3,4,  2,1},
+
+
+    };
+
+    public Puzzle createRandomPuzzleFilled9x9(Cell[][] boxCellBoard9x9){
         puzzle9x9.setCell(boxCellBoard9x9);
         return puzzle9x9;
     }
 
-    public BoxCell[][] createRandomBoxCellBoardFilled9x9(){
-        createBoxCellDeafaultBoard9x9(intBoard);
+    public Cell[][] createRandomBoxCellBoardFilled9x9(){
+        createBoxCellDeafaultBoard9x9(intBoard9x9);
         shuffleNumbers();
         shuffleRows();
         shuffleColumns();
@@ -86,7 +107,7 @@ public class PuzzleService {
     }
 
     void swapRows(int row1, int row2) {
-        BoxCell[] row = boxCellBoard9x9[row1];
+        Cell[] row = boxCellBoard9x9[row1];
         boxCellBoard9x9[row1] = boxCellBoard9x9[row2];
         boxCellBoard9x9[row2] = row;
     }
@@ -103,7 +124,7 @@ public class PuzzleService {
     }
 
     void swapCols(int column1, int column2) {
-        BoxCell columnValue;
+        Cell columnValue;
         for (int i = 0; i < 9; i++){
             columnValue = boxCellBoard9x9[i][column1];
             boxCellBoard9x9[i][column1] = boxCellBoard9x9[i][column2];

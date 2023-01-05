@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class Box { // box of 9 cells that has to be filled with numbers <1,9>
-    private BoxCell[][] cell;
+    private Cell[][] cell;
     private int [][] boxNumber;
     private int size = 9; //parametrize
 
-    public Box(BoxCell[][] cell, int[][] boxNumber) {
+    public Box(Cell[][] cell, int[][] boxNumber) {
         this.cell = cell;
         this.boxNumber = boxNumber;
     }
