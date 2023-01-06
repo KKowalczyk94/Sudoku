@@ -119,18 +119,18 @@ public class PuzzleService {
 
     void shuffleNumbers(Cell[][] board) {
         for (int i = 1; i <= board.length; i++) {
-            int randomNumber = random.nextInt(board.length);
+            int randomNumber = random.nextInt(1,board.length);
             swapNumbers(i, randomNumber, board);
         }
     }
 
-    private void swapNumbers(int n1, int n2, Cell[][] board) {
+    private void swapNumbers(int number1, int number2, Cell[][] board) {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board.length; j++) {
-                if (board[j][i].getNumber() == n1) {
-                    board[j][i].setNumber(n2);
-                } else if (board[j][i].getNumber() == n2) {
-                    board[j][i].setNumber(n1);
+                if (board[j][i].getNumber() == number1) {
+                    board[j][i].setNumber(number2);
+                } else if (board[j][i].getNumber() == number2) {
+                    board[j][i].setNumber(number1);
                 }
             }
         }
@@ -143,7 +143,7 @@ public class PuzzleService {
         int blockNumber;
         for (int i = 0; i < board.length; i++) { // i=0????
             if (board.length == 9) {
-                int randomNumber = random.nextInt(0,3);
+                int randomNumber = random.nextInt(3);
                 blockNumber = i / 3;
                 swapRows(i, blockNumber * 3 + randomNumber, board);
             } else if (board.length == 6) {
@@ -170,7 +170,7 @@ public class PuzzleService {
         int blockNumber;
         for (int i = 0; i < board.length; i++) {
             if (board.length == 9) {
-                int ranNum = random.nextInt(0,3);
+                int ranNum = random.nextInt(3);
                 blockNumber = i / 3;
                 swapCols(i, blockNumber * 3 + ranNum, board);
             } else if (board.length == 6) {
@@ -187,7 +187,7 @@ public class PuzzleService {
 
     void swapCols(int column1, int column2, Cell[][] board) {
         Cell columnValue;
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < board.length; i++) {
             columnValue = board[i][column1];
             board[i][column1] = board[i][column2];
             board[i][column2] = columnValue;
@@ -199,7 +199,7 @@ public class PuzzleService {
     void shuffleBoxRows(Cell[][] board) {
         if (board.length == 6 || board.length == 9) {
             for (int i = 0; i < 3; i++) {
-                int randomNumber = random.nextInt(0,3);
+                int randomNumber = random.nextInt(3);
                 swapBoxRows(i, randomNumber, board);
             }
         } else if (board.length == 4) {
@@ -221,7 +221,7 @@ public class PuzzleService {
     void shuffleBoxColumns(Cell[][] board) {
         if (board.length == 6 || board.length == 9) {
             for (int i = 0; i < 3; i++) {
-                int randomNumber = random.nextInt(0,3);
+                int randomNumber = random.nextInt(3);
                 swapBoxColumns(i, randomNumber, board);
             }
         } else if (board.length == 4) {
@@ -236,5 +236,9 @@ public class PuzzleService {
         for (int i = 0; i < 3; i++) {
             swapCols(column1 * 3 + i, column2 * 3 + i, board);
         }
+    }
+
+    public void deleteNumbersFromCells(int numbersOfCellsToDelete, Cell[][] board){
+
     }
 }
