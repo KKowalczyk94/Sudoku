@@ -27,6 +27,9 @@ public class Sudoku {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        gameBoardService.displayBoard(gameBoardService.createGameBoard9x9(puzzleService.createRandomPuzzleBoardFilled9x9()));
+       // gameBoardService.displayBoard(gameBoardService.createGameBoard9x9(puzzleService.createRandomPuzzleBoardFilled9x9()));
+     //   gameBoardService.displayBoard(gameBoardService.createGameBoard6x6(puzzleService.createRandomPuzzleBoardFilled6x6()));
+        gameBoardService.displayBoard(gameBoardService.createGameBoard4x4(puzzleService.createRandomPuzzleBoardFilled4x4()));
+
     }
 }
