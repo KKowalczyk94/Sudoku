@@ -22,8 +22,8 @@ public class Sudoku {
 
             prop.load(input);
 
-            System.out.println(prop.getProperty("sudokuBoard.size"));
-            System.out.println(prop.getProperty("sudokuBoard.cellsForPlayerToGuess"));
+            System.out.println("Sudoku board size = " + prop.getProperty("sudokuBoard.size"));
+            System.out.println("Empty cells = " + prop.getProperty("sudokuBoard.cellsForPlayerToGuess"));
         } catch (IOException e) {
             e.printStackTrace();
         }
