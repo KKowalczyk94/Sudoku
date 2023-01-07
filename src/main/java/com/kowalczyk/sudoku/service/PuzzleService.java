@@ -2,9 +2,12 @@ package com.kowalczyk.sudoku.service;
 
 import com.kowalczyk.sudoku.model.Cell;
 import com.kowalczyk.sudoku.model.Puzzle;
-import com.kowalczyk.sudoku.model.Status;
 import com.kowalczyk.sudoku.model.SystemProperties;
+import com.kowalczyk.sudoku.model.enums.CellStatus;
+import com.kowalczyk.sudoku.model.enums.PuzzleStatus;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -19,9 +22,10 @@ public class PuzzleService {
         IntStream.rangeClosed(0, boardSize - 1).forEach(
                 i -> IntStream.rangeClosed(0, boardSize - 1).forEach(j -> {
                     boxCellBoard[i][j] = new Cell();
+                    boxCellBoard[i][j].setCellStatus(CellStatus.TOFILL);
                 }));
         System.out.println("");
-        puzzle = new Puzzle(boxCellBoard);
+        puzzle = new Puzzle(boxCellBoard, PuzzleStatus.NOTCOMPLETED);
     }
 
     private int[][] intBoard9x9 = new int[][]{
@@ -109,7 +113,7 @@ public class PuzzleService {
                 boxCellBoard[i][j].setRow(i);
                 boxCellBoard[i][j].setColumn(j);
                 boxCellBoard[i][j].setNumber(intBoard[i][j]);
-                boxCellBoard[i][j].setCellStatus(Status.INITIALLYFILLED);
+                boxCellBoard[i][j].setCellStatus(CellStatus.INITIALLYFILLED);
             }
         return boxCellBoard;
     }
@@ -117,7 +121,7 @@ public class PuzzleService {
 // 2 for each number from 1 to 9 (say num), (i.e 1, 2, 3, 5, 6, 7, 8, 9)
 // take a random number from range [1 to 9], traverse the board, swap num with your random number.
 
-    void shuffleNumbers(Cell[][] board) {
+    private void shuffleNumbers(Cell[][] board) {
         for (int i = 1; i <= board.length; i++) {
             int randomNumber = random.nextInt(1, board.length);
             swapNumbers(i, randomNumber, board);
@@ -139,7 +143,7 @@ public class PuzzleService {
 // 3 Now shuffle rows. Take the first group of 3 rows , shuffle them ,
 // and do it for all rows. (in 9 X 9 sudoku), do it for second group and as well as third.
 
-    void shuffleRows(Cell[][] board) throws Exception {
+    private void shuffleRows(Cell[][] board) throws Exception {
         int blockNumber;
         for (int i = 0; i < board.length; i++) { // i=0????
             if (board.length == 9) {
@@ -151,14 +155,14 @@ public class PuzzleService {
                 blockNumber = i / 2;
                 swapRows(i, blockNumber * 2 + randomNumber, board);
             } else if (board.length == 4) {
-                int randomNumber = random.nextInt(1);
+                int randomNumber = random.nextInt(2);
                 blockNumber = i / 2;
                 swapRows(i, blockNumber * 2 + randomNumber, board);
             } else throw new Exception("Wrong size of the board");
         }
     }
 
-    void swapRows(int row1, int row2, Cell[][] board) {
+    private void swapRows(int row1, int row2, Cell[][] board) {
         Cell[] row = board[row1];
         board[row1] = board[row2];
         board[row2] = row;
@@ -166,7 +170,7 @@ public class PuzzleService {
 
 // 4 Swap columns, again take block of 3 columns , shuffle them, and do it for all 3 blocks
 
-    void shuffleColumns(Cell[][] board) throws Exception {
+    private void shuffleColumns(Cell[][] board) throws Exception {
         int blockNumber;
         for (int i = 0; i < board.length; i++) {
             if (board.length == 9) {
@@ -185,7 +189,7 @@ public class PuzzleService {
         }
     }
 
-    void swapCols(int column1, int column2, Cell[][] board) {
+    private void swapCols(int column1, int column2, Cell[][] board) {
         Cell columnValue;
         for (int i = 0; i < board.length; i++) {
             columnValue = board[i][column1];
@@ -196,7 +200,7 @@ public class PuzzleService {
 
 // 5 swap the row blocks itself (ie 3X3 or 2x2 blocks)
 
-    void shuffleBoxRows(Cell[][] board) {
+    private void shuffleBoxRows(Cell[][] board) {
         if (board.length == 9) {
             for (int i = 0; i < 3; i++) {
                 int randomNumber = random.nextInt(3);
@@ -209,17 +213,18 @@ public class PuzzleService {
             }
         } else if (board.length == 4) {
             for (int i = 0; i < 2; i++) {
-                int randomNumber = random.nextInt(1);
+                int randomNumber = random.nextInt(2);
                 swapBoxRows(i, randomNumber, board);
             }
         }
     }
 
-    void swapBoxRows(int row1, int row2, Cell[][] board) {
-        if (board.length == 6 || board.length == 9){
-        for (int i = 0; i < 3; i++) {
-            swapRows(row1 * 3 + i, row2 * 3 + i, board);
-        }} else if (board.length == 4) {
+    private void swapBoxRows(int row1, int row2, Cell[][] board) {
+        if (board.length == 6 || board.length == 9) {
+            for (int i = 0; i < 3; i++) {
+                swapRows(row1 * 3 + i, row2 * 3 + i, board);
+            }
+        } else if (board.length == 4) {
             for (int i = 0; i < 2; i++) {
                 swapRows(row1 * 2 + i, row2 * 2 + i, board);
             }
@@ -228,7 +233,7 @@ public class PuzzleService {
 
 // 6 do the same for columns, swap blockwise
 
-    void shuffleBoxColumns(Cell[][] board) {
+    private void shuffleBoxColumns(Cell[][] board) {
         if (board.length == 6 || board.length == 9) {
             for (int i = 0; i < 3; i++) {
                 int randomNumber = random.nextInt(3);
@@ -248,7 +253,95 @@ public class PuzzleService {
         }
     }
 
-    public void deleteNumbersFromCells(int numbersOfCellsToDelete, Cell[][] board) {
+    private void deleteNumbersFromCells(int numbersOfCellsToDelete, Cell[][] board) {
+        Map<Integer, Integer> cellsAlreadyDeleted = new HashMap<>();
+        int iterator = 0;
+        while (iterator < cellsForPlayerToGuess) {
+            Integer row = random.nextInt(board.length);
+            Integer column = random.nextInt(board.length);
+            if (!cellsAlreadyDeleted.containsKey(row) && !cellsAlreadyDeleted.containsValue(column)) {
+                cellsAlreadyDeleted.put(row, column);
+                board[row][column] = new Cell();
+                board[row][column].setCellStatus(CellStatus.TOFILL);
+                iterator++;
+            }
+        }
+    }
 
+    public boolean scanPuzzleIfCorrectlyFilled(Cell[][] board) {
+        boolean rowTest = false;
+        boolean columnTest = false;
+        for (int row = 0; row < board.length; row++)
+            for (int column = 0; column < board.length; column++) {
+                int number = board[row][column].getNumber();
+
+                for (int rowCheck = row; rowCheck < board.length; rowCheck++) {
+                    if (number == board[rowCheck][column].getNumber()) {
+                        rowTest = false;
+                    } else if (number != board[rowCheck][column].getNumber()) {
+                        rowTest = true;
+                    }
+                }
+                for (int columnCheck = column; columnCheck < board.length; columnCheck++) {
+                    if (number == board[row][columnCheck].getNumber()) {
+                        columnTest = false;
+                    } else if (number != board[row][columnCheck].getNumber()) {
+                        columnTest = true;
+                    }
+                }
+
+                if (rowTest && columnTest) {
+                    System.out.println("Puzzle is filled correctly");
+                    puzzle.setPuzzleStatus(PuzzleStatus.RIGHTNUMBERS);
+                } else {
+                    System.out.println("Puzzle is filled wrong");
+                    puzzle.setPuzzleStatus(PuzzleStatus.WRONGNUMERS);
+                }
+            }
+        return (rowTest && columnTest);
+    }
+
+    public boolean checkIfPlayerInputIsCorrect(int number, int row, int column, Cell[][] board) {
+        boolean rowTest = false;
+        boolean columnTest = false;
+
+        for (int rowCheck = row; rowCheck < board.length; rowCheck++) {
+            if (number == board[rowCheck][column].getNumber()) {
+                rowTest = false;
+            } else if (number != board[rowCheck][column].getNumber()) {
+                rowTest = true;
+            }
+        }
+        for (int columnCheck = column; columnCheck < board.length; columnCheck++) {
+            if (number == board[row][columnCheck].getNumber()) {
+                columnTest = false;
+            } else if (number != board[row][columnCheck].getNumber()) {
+                columnTest = true;
+            }
+        }
+
+        if (rowTest && columnTest) {
+            System.out.println("Cell is filled correctly");
+            board[row][column].setCellStatus(CellStatus.CORRECTLYFILLED);
+        } else {
+            System.out.println("Cell is filled wrong");
+            puzzle.setPuzzleStatus(PuzzleStatus.WRONGNUMERS);
+            board[row][column].setCellStatus(CellStatus.WRONGLYFILLED);
+        }
+        return (rowTest && columnTest);
+    }
+
+
+    public boolean checkIfPuzzleIsCompleted(Cell[][] board) {
+        return scanPuzzleIfCorrectlyFilled(board) && isBoardFilled(board);
+    }
+
+    private boolean isBoardFilled(Cell[][] board){
+        for (int row = 0; row < board.length; row++)
+            for (int column = 0; column < board.length; column++){
+                if(board[row][column].getCellStatus().equals(CellStatus.TOFILL))
+                    return false;
+            }
+        return true;
     }
 }
