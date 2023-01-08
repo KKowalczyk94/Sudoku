@@ -386,6 +386,19 @@ public class PuzzleService {
             System.out.println("Wrong number!");
         }
     }
+    public void deleteCellNumber(Cell[][] board){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Chose row: ");
+        int row = scanner.nextInt();
+        System.out.println("Chose column: ");
+        int column = scanner.nextInt();
+        if (row < board.length && column < board.length && !board[row][column].getCellStatus().equals(CellStatus.INITIALLYFILLED)){
+            board[row][column].setNumber(0);
+            board[row][column].setCellStatus(CellStatus.TOFILL);
+        }else {
+            System.out.println("Wrong cell!");
+        }
+    }
 //TODO method for changing CELLSTATUS for whole row and column
     //TODO method for changing PUZZLESTATUS
     //TODO or block incorrect input
