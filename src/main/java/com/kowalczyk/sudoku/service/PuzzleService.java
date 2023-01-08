@@ -6,8 +6,7 @@ import com.kowalczyk.sudoku.model.SystemProperties;
 import com.kowalczyk.sudoku.model.enums.CellStatus;
 import com.kowalczyk.sudoku.model.enums.PuzzleStatus;
 
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class PuzzleService {
@@ -80,7 +79,7 @@ public class PuzzleService {
         shuffleRows(board);
         shuffleColumns(board);
         shuffleBoxRows(board);
-        shuffleColumns(board);
+        shuffleBoxColumns(board);
         return createPuzzle9x9(board);
     }
 
@@ -271,47 +270,79 @@ public class PuzzleService {
         }
     }
 
-    public boolean scanPuzzleIfCorrectlyFilled(Cell[][] board) {
+    private boolean rowCheck(int row, Cell[][] board) {
+        List<Integer> rowCheck = new ArrayList<>();
+        List<Integer> rowNumbers = new ArrayList<>();
+        for (int number = 1; number <= board.length; number++) {
+            rowCheck.add(number);
+            rowNumbers.add(board[row][number - 1].getNumber());
+        }
+        Collections.sort(rowNumbers);
+        return rowNumbers.equals(rowCheck);
+    }
+
+    private boolean inputRowCheck(int row, int number, Cell[][] board) {
+        boolean rowTest = false;
+        for (int column = 0; column < board.length; column++) {
+            if (number != board[row][column].getNumber()) {
+                rowTest = true;
+            } else {
+                rowTest = false;
+                break;
+            }
+        }
+        return rowTest;
+    }
+
+    private boolean columnCheck(int column, Cell[][] board) {
+        List<Integer> columnCheck = new ArrayList<>();
+        List<Integer> columnNumbers = new ArrayList<>();
+        for (int number = 1; number <= board.length; number++) {
+            columnCheck.add(number);
+            columnNumbers.add(board[number - 1][column].getNumber());
+        }
+        Collections.sort(columnNumbers);
+        return columnNumbers.equals(columnCheck);
+    }
+
+    private boolean inputColumnCheck(int column, int number, Cell[][] board) {
+        boolean columnTest = false;
+        for (int row = 0; row < board.length; row++) {
+            if (number != board[row][column].getNumber()) {
+                columnTest = true;
+            } else {
+                columnTest = false;
+                break;
+            }
+        }
+        return columnTest;
+    }
+
+    public boolean isPuzzleFilledCorrectly(Cell[][] board) {
         boolean rowTest = false;
         boolean columnTest = false;
-        for (int row = 0; row < board.length; row++)
-            for (int column = 0; column < board.length; column++) {
-                int number = board[row][column].getNumber();
-                for (int rowCheck = row; rowCheck < board.length; rowCheck++) {
-                    if (number != board[rowCheck][column].getNumber()) {
-                        rowTest = true;
-                    }
-                }
-                for (int columnCheck = column; columnCheck < board.length; columnCheck++) {
-                    if (number != board[row][columnCheck].getNumber()) {
-                        columnTest = true;
-                    }
-                }
+        for (int row = 0; row < board.length; row++) {
+            //           for (int column = 0; column < board.length; column++) {
+            rowTest = rowCheck(row, board);
+            if (!rowTest) {
+                break;
             }
-        if (rowTest && columnTest) {
+        }
+        if (rowTest) {
             System.out.println("Puzzle is filled correctly");
             puzzle.setPuzzleStatus(PuzzleStatus.RIGHTNUMBERS);
         } else {
             System.out.println("Puzzle is filled wrong");
             puzzle.setPuzzleStatus(PuzzleStatus.WRONGNUMERS);
         }
-
-        return (rowTest && columnTest);
+        return (rowTest);
     }
 
     public boolean isPlayerInputCorrect(int number, int row, int column, Cell[][] board) {
         boolean rowTest = false;
         boolean columnTest = false;
-        for (int rowCheck = row; rowCheck < board.length; rowCheck++) {
-            if (number != board[rowCheck][column].getNumber()) {
-                rowTest = true;
-            }
-        }
-        for (int columnCheck = column; columnCheck < board.length; columnCheck++) {
-            if (number != board[row][columnCheck].getNumber()) {
-                columnTest = true;
-            }
-        }
+        rowTest = inputRowCheck(row, number, board);
+        columnTest = inputColumnCheck(column, number, board);
         if (rowTest && columnTest) {
             System.out.println("Cell is filled correctly");
             board[row][column].setCellStatus(CellStatus.CORRECTLYFILLED);
@@ -333,7 +364,7 @@ public class PuzzleService {
     }
 
     public boolean isPuzzleCompleted(Cell[][] board) {
-        return scanPuzzleIfCorrectlyFilled(board) && isBoardFilled(board);
+        return isPuzzleFilledCorrectly(board) && isBoardFilled(board);
     }
 
     public void putNumberIntoBoard(Cell[][] board) {
@@ -346,13 +377,16 @@ public class PuzzleService {
         column = scanner.nextInt();
         System.out.println("Chose number: ");
         number = scanner.nextInt();
-        //      } while (number > 0 && number <= board.length);
         if (isPlayerInputCorrect(number, row, column, board) && number > 0 && number <= board.length) {
             board[row][column].setNumber(number);
             board[row][column].setCellStatus(CellStatus.CORRECTLYFILLED);
-        } else {
+        }
+        else {
+//            board[row][column].setNumber(0);
             System.out.println("Wrong number!");
         }
     }
-
+//TODO method for changing CELLSTATUS for whole row and column
+    //TODO method for changing PUZZLESTATUS
+    //TODO or block incorrect input
 }

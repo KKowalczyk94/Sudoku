@@ -1,6 +1,5 @@
 package com.kowalczyk.sudoku;
 
-import com.kowalczyk.sudoku.helperClasses.SudokuFiller;
 import com.kowalczyk.sudoku.model.Cell;
 import com.kowalczyk.sudoku.service.GameBoardService;
 import com.kowalczyk.sudoku.service.PuzzleService;
@@ -34,10 +33,9 @@ public class Sudoku {
 
         Cell[][] board = puzzleService.createRandomPuzzleBoardFilled9x9().getCells();
         puzzleService.deleteNumbersFromCells(board);
-        while (puzzleService.isPuzzleCompleted(board)) {
+        while (!puzzleService.isPuzzleCompleted(board)) {
             gameBoardService.displayBoard(gameBoardService.createGameBoard9x9(puzzleService.createPuzzle9x9(board)));
             puzzleService.putNumberIntoBoard(board);
-            System.out.println("Is player input correct: " + puzzleService.scanPuzzleIfCorrectlyFilled(board));
         }
         System.out.println("GAME WON!");
     }
