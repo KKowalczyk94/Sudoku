@@ -320,9 +320,7 @@ public class PuzzleService {
 
     public boolean isPuzzleFilledCorrectly(Cell[][] board) {
         boolean rowTest = false;
-        boolean columnTest = false;
         for (int row = 0; row < board.length; row++) {
-            //           for (int column = 0; column < board.length; column++) {
             rowTest = rowCheck(row, board);
             if (!rowTest) {
                 break;
@@ -339,11 +337,11 @@ public class PuzzleService {
     }
 
     public boolean isPlayerInputCorrect(int number, int row, int column, Cell[][] board) {
-        boolean rowTest = false;
-        boolean columnTest = false;
-        rowTest = inputRowCheck(row, number, board);
-        columnTest = inputColumnCheck(column, number, board);
-        if (rowTest && columnTest) {
+        boolean rowInputTest = false;
+        boolean columnInputTest = false;
+        rowInputTest = inputRowCheck(row, number, board);
+        columnInputTest = inputColumnCheck(column, number, board);
+        if (rowInputTest && columnInputTest) {
             System.out.println("Cell is filled correctly");
             board[row][column].setCellStatus(CellStatus.CORRECTLYFILLED);
         } else {
@@ -351,7 +349,7 @@ public class PuzzleService {
             puzzle.setPuzzleStatus(PuzzleStatus.WRONGNUMERS);
             board[row][column].setCellStatus(CellStatus.WRONGLYFILLED);
         }
-        return (rowTest && columnTest);
+        return (rowInputTest && columnInputTest);
     }
 
     private boolean isBoardFilled(Cell[][] board) {
@@ -370,7 +368,6 @@ public class PuzzleService {
     public void putNumberIntoBoard(Cell[][] board) {
         Scanner scanner = new Scanner(System.in);
         int number, row, column;
-        //    do {
         System.out.println("Chose row: ");
         row = scanner.nextInt();
         System.out.println("Chose column: ");
@@ -382,7 +379,6 @@ public class PuzzleService {
             board[row][column].setCellStatus(CellStatus.CORRECTLYFILLED);
         }
         else {
-//            board[row][column].setNumber(0);
             System.out.println("Wrong number!");
         }
     }
@@ -399,7 +395,4 @@ public class PuzzleService {
             System.out.println("Wrong cell!");
         }
     }
-//TODO method for changing CELLSTATUS for whole row and column
-    //TODO method for changing PUZZLESTATUS
-    //TODO or block incorrect input
 }
