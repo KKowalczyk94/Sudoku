@@ -257,8 +257,8 @@ public class PuzzleService {
         int[][] cellsDeleted = new int[board.length][board.length];
         int iterator = 0;
         while (iterator < cellsForPlayerToGuess) {
-            Integer row = random.nextInt(board.length);
-            Integer column = random.nextInt(board.length);
+            int row = random.nextInt(board.length);
+            int column = random.nextInt(board.length);
             if (cellsDeleted[row][column] == 0) {
                 cellsDeleted[row][column] = 1;
                 board[row][column] = new Cell();
@@ -320,13 +320,20 @@ public class PuzzleService {
 
     public boolean isPuzzleFilledCorrectly(Cell[][] board) {
         boolean rowTest = false;
+        boolean columnTest = false;
         for (int row = 0; row < board.length; row++) {
             rowTest = rowCheck(row, board);
             if (!rowTest) {
                 break;
             }
         }
-        if (rowTest) {
+        for (int column = 0; column < board.length; column++) {
+            columnTest = columnCheck(column, board);
+            if (!columnTest) {
+                break;
+            }
+        }
+        if (rowTest && columnTest) {
             System.out.println("Puzzle is filled correctly");
             puzzle.setPuzzleStatus(PuzzleStatus.RIGHTNUMBERS);
         } else {

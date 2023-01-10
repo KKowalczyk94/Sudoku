@@ -1,6 +1,7 @@
 package com.kowalczyk.sudoku;
 
 import com.kowalczyk.sudoku.model.Cell;
+import com.kowalczyk.sudoku.model.SystemProperties;
 import com.kowalczyk.sudoku.service.GameBoardService;
 import com.kowalczyk.sudoku.service.PuzzleService;
 
@@ -12,6 +13,7 @@ import java.util.Scanner;
 
 public class Sudoku {
     public static void main(String[] args) throws Exception {
+        int boardSize = Integer.parseInt(SystemProperties.PROPS.getProperty("sudokuBoard.size"));
         Scanner scanner = new Scanner(System.in);
         PuzzleService puzzleService = new PuzzleService();
         GameBoardService gameBoardService = new GameBoardService();
@@ -33,7 +35,11 @@ public class Sudoku {
         //   gameBoardService.displayBoard(gameBoardService.createGameBoard6x6(puzzleService.createRandomPuzzleBoardFilled6x6()));
         //   gameBoardService.displayBoard(gameBoardService.createGameBoard4x4(puzzleService.createRandomPuzzleBoardFilled4x4()));
 
-        Cell[][] board = puzzleService.createRandomPuzzleBoardFilled9x9().getCells();
+   //     Cell[][] board = puzzleService.createRandomPuzzleBoardFilled9x9().getCells();
+        Cell[][] board = puzzleService.createRandomPuzzleBoardFilled6x6().getCells();
+      //  Cell[][] board = puzzleService.createRandomPuzzleBoardFilled4x4().getCells();
+
+
         puzzleService.deleteNumbersFromCells(board);
         while (!puzzleService.isPuzzleCompleted(board)) {
             String action = "a";
