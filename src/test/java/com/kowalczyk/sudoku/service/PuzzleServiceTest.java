@@ -13,11 +13,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class PuzzleServiceTest {
@@ -145,6 +143,7 @@ public class PuzzleServiceTest {
 
     @Test
     public void testIsPuzzleFilledCorrectly() throws Exception {
+        // givenIncorrectBoardValues_boardPopulated_expectedFalse name for test when assertFalse
         //given
         Cell[][] board = new Cell[9][9];
         //when
